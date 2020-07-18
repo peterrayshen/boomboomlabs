@@ -10,3 +10,7 @@ A SYDE 361 project for music creation.
 5. Run `npm start`
 6. Goto `http://localhost:8000/` for step sequencer page.
 7. Goto `http://localhost:8000/ga` for GA page.
+
+## How to update this
+### For Darren and Princely
+Copy your `sketch.js` file to the `<script>` section in `boomboomlabs/WebApp/ga.html`.
