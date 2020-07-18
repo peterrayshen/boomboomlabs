@@ -9,4 +9,4 @@ A SYDE 361 project for music creation.
 4. Run `npm install`
 5. Run `npm start`
 6. Goto `http://localhost:8000/` for step sequencer page.
-7. Goto `http://localhost:8000/ga` for step sequencer page.
+7. Goto `http://localhost:8000/ga` for GA page.
