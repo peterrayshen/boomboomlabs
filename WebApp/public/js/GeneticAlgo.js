@@ -52,7 +52,7 @@ const newGeneration = (beats) => {
     newPoplution = generate(population, matingPool);
     formatted = [];
     newPoplution.forEach(element => {
-        formatted.push({data: element.sequence.toString(), rating: element.rating});
+        formatted.push({data: element.sequence.join(""), rating: element.rating});
     })
     return formatted;
 }
