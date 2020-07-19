@@ -110,4 +110,4 @@ newPopulation = newGeneration([{
     rating: 1
     }]);
 
-console.log(newPopulation); // eg. {data: "1,0,1,0,1,0", rating: 1}, {data: "1,0,1,0,1,0", rating: 1}
+console.log(newPopulation); // eg. [{data: "101010", rating: 1}, {data: "101010", rating: 1}]
