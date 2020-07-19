@@ -64,22 +64,11 @@ mainControl.addEventListener('click', () => {
 const popup = document.querySelector('.pop-up');
 
 document.querySelector('.show-pop-up').addEventListener('click', () => {
-    // if (loop) {
-    //     loop.dispose();
-    //     loop = undefined;
-    // }
-
     Tone.Transport.cancel();
     popup.style.display = 'block';
 });
 
 document.querySelector('.close-pop-up').addEventListener('click', () => {
-    // if (loop2) {
-    //     console.log('disposed');
-    //     loop2.dispose();
-    //     loop2 = undefined;
-    // }
-
     Tone.Transport.cancel();
     popup.style.display = 'none';
 });
@@ -89,14 +78,12 @@ document.querySelector('.close-pop-up').addEventListener('click', () => {
 const sequencer = document.querySelector('step-sequencer');
 
 
-setTimeout(() => {sequencer.updateValues('1010100010111010', 1)}, 3000);
 
-const beat1 = document.querySelector('.beat-1');
-beat1.addEventListener('click', () => {
-    createSecondaryLoop(
-        'hh',
-        [true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false]
-    );
-    Tone.Transport.toggle();
-    beat1.innerHTML = beat1.innerHTML === 'Start' ? 'Stop' : 'Start';
-});
+const soundset = document.querySelector('sound-set');
+soundset.data = ['1010101010100100', '1111111100011111', '000100010000100', '1000100011010101', '0000000111100010'];
+soundset.callback = function (param) {
+    console.log(param);
+}
+
+
+setTimeout(() => {sequencer.updateValues('1010100010111010', 1)}, 3000);
