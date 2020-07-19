@@ -1,7 +1,7 @@
 /*
- * @name Song
+ * @name BoomBoom Labs
  * @frame 720, 430
- * @description Play a song.
+ * @description 
  * You will need to include the
  * <a href="http://p5js.org/reference/#/libraries/p5.sound">p5.sound
  * library</a> for this example to work in your own project.
@@ -12,7 +12,7 @@ let value = 100;
 
 // dropdowns for ranking sounds
 let sel1;
-
+let stop = true;
 // For automatically playing the song
 let index = 0;
 let song = [
@@ -26,17 +26,24 @@ let song = [
   { note: 0, duration: 400, display: "G" }
 ];
 
-var songs = ['lucky_dragons_-_power_melody.mp3','Siren Song (From Siren).wav',];
+var songs = ['hh.mp3','hho.mp3','kick.mp3','snare.mp3', 'newperson.mp3'];
 var sounds = [];
 
 var items = [];
+let key;
+let splitString = [];
 
 let trigger = 0;
 let autoplay = false;
 let osc;
 
+var soundStrings = ['', '', '', '', '',];
+var numChars = 16;
+let words = ['0', '1',];
+let k = 0;
+
 function preload() {
-  // song file
+  // load song file
   for(let i = 0; i<songs.length;i++){
   sounds[i] = loadSound(songs[i]); 
  }
@@ -55,6 +62,20 @@ function setup() {
       autoplay = true;
     }
   });
+  
+  // generate random strings
+  // generate random sounds
+  for (let i = 0; i < songs.length; i++){
+    for (let x = 0; x < numChars; x++){
+      soundStrings[i] += random(words) + ","; 
+    }
+  }
+  
+  // print strings
+ for (let i = 0; i < soundStrings.length; i++){
+    print(soundStrings[i]);
+  }
+  
   
   // declare dropdowns
   sel1 = createSelect();
@@ -148,8 +169,13 @@ function draw() {
   } else if (index >= song.length) {
     autoplay = false;
   }
-
-
+  
+  if (stop === true){
+    for (let i = 0; i < sounds.length; i++) {
+    sounds[i].stop();
+    }
+  }
+  
   // Draw a keyboard
 
   // The width for each key
@@ -198,18 +224,46 @@ function mouseDragged()
 function mousePressed(event) {
   if(event.button == 0 && event.clientX < width && event.clientY < height) {
     // Map mouse to the key index
-    let key = floor(map(mouseX, 0, width/2, 0, notes.length));
+     key = floor(map(mouseX, 0, width/1.5, 0, notes.length));
     print(key);
+    // if (key == 6){
+    //   key = 5;
+    // }
    // playNote(notes[key].play());
-    sounds[key].play();
-    
+    stop = false;
+    splitString = split(soundStrings[key], ',');
+    delayTime();
   }
 }
 
+function delayTime(){
+  // nothing 
+  if (stop === false){
+     // print(splitString.length);
+      // if char is 1 play sound
+      if(splitString[k] === '1' && k < splitString.length){
+          sounds[key].play();
+          k++;
+          print('1');
+          //delay
+        setTimeout(delayTime,1000);
+      } else if (splitString[k] === '0' && k < splitString.length) {
+        //delay
+        k++;
+        print('0');
+      setTimeout(delayTime,1000);
+      } else {
+   
+      }
+  }
+    
+}
   
 // Fade it out when we release
 function mouseReleased() {
   osc.fade(0,0.5);
+  stop = true;
+  k =0; // reset beat indexer
 }
 
 
