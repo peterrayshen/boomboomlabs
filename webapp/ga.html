@@ -10,8 +10,14 @@
 	<script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+  <script defer src=https://cdn.JsDelivr.net/npm/p5></script>
+  <script defer src=https://cdn.JsDelivr.net/npm/p5/lib/addons/p5.dom.min.js></script>
+  <script defer src=https://cdn.JsDelivr.net/npm/p5/lib/addons/p5.sound.min.js></script>
+
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 	<style type="text/css">
 		tone-transport {
 			margin-bottom: 10px;
@@ -37,6 +43,7 @@ let sel1;
 
 // For automatically playing the song
 let stop = true;
+let play = false;
 let index = 0;
 // let song = [
 //   { note: 4, duration: 400, display: "D" },
@@ -53,7 +60,7 @@ var songs = ['hh.mp3','hho.mp3','kick.mp3','snare.mp3', 'newperson.mp3'];
 var sounds = [];
 
 var items = ['1','1','1','1','1'];
-let key;
+let key=0;
 let splitString = [];
 
 let trigger = 0;
@@ -67,9 +74,9 @@ let k = 0;
 
 function preload() {
   // load song file
-  for(let i = 0; i<songs.length;i++){
-  sounds[i] = loadSound("./sounds/" + songs[i]); 
- }
+  for(let i = 0; i<songs.length; i++){
+    sounds[i] = loadSound("./sounds/" + songs[i]); 
+  }
 }
 
 function setup() {
@@ -205,6 +212,8 @@ function draw() {
     }
   }
 
+  
+
   // Draw a keyboard
 
   // The width for each key
@@ -239,7 +248,10 @@ function draw() {
     sel5.position(i*w, 90);
   }
 
+  
+
 }
+
 
 function mouseDragged() 
 {
@@ -249,18 +261,50 @@ function mouseDragged()
   }
 }
 
+function wait(ms)
+{
+    var d = new Date();
+    var d2 = null;
+    do { d2 = new Date(); }
+    while(d2-d < ms);
+}
+
 // When we click
 function mousePressed(event) {
-  if(event.submitButton == 0 && event.clientX < width && event.clientY < height) {
+  print("the mouse has been pressed");
+  
+  if(event.clientX < width && event.clientY < height) {
+   
     // Map mouse to the key index
-    let key = floor(map(mouseX, 0, width/1.5, 0, notes.length));
-    print(key);
+    key = floor(map(mouseX, 0, width/1.5, 0, notes.length));
+    
    // playNote(notes[key].play());
-    sounds[key].play();
+    
     stop = false;
     splitString = split(soundStrings[key], ',');
     delayTime();
-    
+    // if (stop === false && k < splitString.length){
+    //     // print(splitString.length);
+    //       // if char is 1 play sound
+    //     print("k=" +k);
+    //     if(splitString[k] === '1' ){
+    //         sounds[key].play();
+    //         k++;
+    //         print('1');
+    //         setTimeout(mousePressed, 1000);
+    //         // wait(1000);
+    //         //delay
+    //     } else if (splitString[k] === '0') {
+    //       //delay
+    //       play = false;
+    //       k++;
+    //       print('0');
+    //       setTimeout(mousePressed, 1000);
+    //       // wait(1000);
+    //     } else {
+
+    //     }
+    // }
   }
 }
 
@@ -269,17 +313,20 @@ function delayTime(){
   if (stop === false){
      // print(splitString.length);
       // if char is 1 play sound
+      print("key=" + key);
       if(splitString[k] === '1' && k < splitString.length){
           sounds[key].play();
+          play = true;
           k++;
           print('1');
           //delay
-        setTimeout(delayTime,1000);
+          setTimeout(delayTime,1000);
       } else if (splitString[k] === '0' && k < splitString.length) {
         //delay
+        play = false;
         k++;
         print('0');
-      setTimeout(delayTime,1000);
+        setTimeout(delayTime,1000);
       } else {
 
       }
@@ -292,6 +339,7 @@ function delayTime(){
 function mouseReleased() {
   osc.fade(0,0.5);
   stop = true;
+  play = false;
   k =0; // reset beat indexer
 }
 
