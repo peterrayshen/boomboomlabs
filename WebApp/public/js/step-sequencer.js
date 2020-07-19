@@ -24,6 +24,14 @@ export class ToneStepSequencer extends LitElement {
         return this.values[Math.clamp(this.highlight, 0, this.columns - 1)]
     }
 
+    updateValues(sequence, row) {
+        sequence.split('').forEach((val, col) => {
+            this.values[col][row] = Boolean(Number(val));
+        });
+
+        this.requestUpdate();
+    }
+
     _mousedown(e, x, y) {
         if (e.cancelable) {
             e.preventDefault()
@@ -109,6 +117,10 @@ export class ToneStepSequencer extends LitElement {
             .row.filled {
                 background-color: teal;
             }
+            .row button {
+                width: 100%;
+                height: 100%
+            }
         `;
     }
 
@@ -129,7 +141,21 @@ export class ToneStepSequencer extends LitElement {
                                 class="row ${row ? 'filled' : ''}"></div>
                         `)}
                     </div>
-				`)}
+                `)}
+                <div class="column">
+                    <div class="row">
+                        <button>Modify</button>
+                    </div>
+                    <div class="row">
+                        <button>Modify</button>
+                    </div>
+                    <div class="row">
+                        <button>Modify</button>
+                    </div>
+                    <div class="row">
+                        <button>Modify</button>
+                    </div>
+                </div>
             </div>
         `
     }
