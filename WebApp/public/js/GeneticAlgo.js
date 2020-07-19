@@ -18,7 +18,7 @@ class Beat {
     mutate(mutationRate) {
         for (var i = 0; i < this.sequence.length; i++) {
             if (Math.random() < mutationRate) {
-                this.sequence[i] = 0 ? this.sequence[1] == 1 : 0;
+                this.sequence[i] = this.sequence[1] == 1 ? 0 : 1;
             }
         }
     }
