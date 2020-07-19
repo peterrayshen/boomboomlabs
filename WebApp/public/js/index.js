@@ -11,6 +11,8 @@ const noteNames = Object.keys(samples);
 let loop, loop2;
 
 function createMainLoop() {
+    Tone.Transport.cancel();
+
     // Runs the loop for the step sequencer.
     loop = new Tone.Sequence(function(time, col) {
         const currentColumn = document.querySelector("step-sequencer").currentColumn;
@@ -31,6 +33,8 @@ function createMainLoop() {
 }
 
 function createSecondaryLoop(soundName, row) {
+    Tone.Transport.cancel();
+
     loop2 = new Tone.Sequence(function(time, col) {        
         if (row[col]) {
             keys.get(soundName).start(time, 0, '32n');
@@ -60,29 +64,32 @@ mainControl.addEventListener('click', () => {
 const popup = document.querySelector('.pop-up');
 
 document.querySelector('.show-pop-up').addEventListener('click', () => {
-    if (loop) {
-        loop.dispose();
-        loop = undefined;
-    }
+    // if (loop) {
+    //     loop.dispose();
+    //     loop = undefined;
+    // }
 
+    Tone.Transport.cancel();
     popup.style.display = 'block';
 });
 
 document.querySelector('.close-pop-up').addEventListener('click', () => {
-    if (loop2) {
-        console.log('disposed');
-        loop2.dispose();
-        loop2 = undefined;
-    }
+    // if (loop2) {
+    //     console.log('disposed');
+    //     loop2.dispose();
+    //     loop2 = undefined;
+    // }
 
-    Tone.Transport.stop();
+    Tone.Transport.cancel();
     popup.style.display = 'none';
 });
 
 
 
-// const sequencer = document.querySelector('step-sequencer');
-// setTimeout(() => {sequencer.values = JSON.parse(values); console.log(sequencer.values)}, 5000);
+const sequencer = document.querySelector('step-sequencer');
+
+
+setTimeout(() => {sequencer.updateValues('1010100010111010', 1)}, 3000);
 
 const beat1 = document.querySelector('.beat-1');
 beat1.addEventListener('click', () => {
