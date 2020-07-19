@@ -57,7 +57,6 @@ const soundset = document.querySelector('sound-set');
 const sequencer = document.querySelector('step-sequencer');
 const slider = document.querySelector(".slider");
 
-soundset.data = ['1010101010100100', '1111111100011111', '000100010000100', '1000100011010101', '0000000111100010'];
 soundset.callback = function (data, currentRow) {
     sequencer.updateValues(data, currentRow);
     Tone.Transport.cancel();
@@ -65,6 +64,15 @@ soundset.callback = function (data, currentRow) {
 }
 
 sequencer.callback = function (currentRow) {
+    soundset.data = [
+        [
+            {data: '1010101010100100', rating: 1}, 
+            {data: '1111111100011111', rating: 1}, 
+            {data: '0001000100001001', rating: 1}, 
+            {data: '1000100011010101', rating: 1}, 
+            {data: '0000000111100010', rating: 1}
+        ]
+    ];
     Tone.Transport.cancel();
     popup.style.display = 'block';
     soundset.soundName = noteNames[currentRow-1];
