@@ -11,6 +11,8 @@ const noteNames = Object.keys(samples);
 let loop, loop2;
 
 function createMainLoop() {
+    Tone.Transport.cancel();
+
     // Runs the loop for the step sequencer.
     loop = new Tone.Sequence(function(time, col) {
         const currentColumn = document.querySelector("step-sequencer").currentColumn;
@@ -31,6 +33,8 @@ function createMainLoop() {
 }
 
 function createSecondaryLoop(soundName, row) {
+    Tone.Transport.cancel();
+
     loop2 = new Tone.Sequence(function(time, col) {        
         if (row[col]) {
             keys.get(soundName).start(time, 0, '32n');
@@ -60,36 +64,26 @@ mainControl.addEventListener('click', () => {
 const popup = document.querySelector('.pop-up');
 
 document.querySelector('.show-pop-up').addEventListener('click', () => {
-    if (loop) {
-        loop.dispose();
-        loop = undefined;
-    }
-
+    Tone.Transport.cancel();
     popup.style.display = 'block';
 });
 
 document.querySelector('.close-pop-up').addEventListener('click', () => {
-    if (loop2) {
-        console.log('disposed');
-        loop2.dispose();
-        loop2 = undefined;
-    }
-
-    Tone.Transport.stop();
+    Tone.Transport.cancel();
     popup.style.display = 'none';
 });
 
 
 
-// const sequencer = document.querySelector('step-sequencer');
-// setTimeout(() => {sequencer.values = JSON.parse(values); console.log(sequencer.values)}, 5000);
+const sequencer = document.querySelector('step-sequencer');
 
-const beat1 = document.querySelector('.beat-1');
-beat1.addEventListener('click', () => {
-    createSecondaryLoop(
-        'hh',
-        [true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false]
-    );
-    Tone.Transport.toggle();
-    beat1.innerHTML = beat1.innerHTML === 'Start' ? 'Stop' : 'Start';
-});
+
+
+const soundset = document.querySelector('sound-set');
+soundset.data = ['1010101010100100', '1111111100011111', '000100010000100', '1000100011010101', '0000000111100010'];
+soundset.callback = function (param) {
+    console.log(param);
+}
+
+
+setTimeout(() => {sequencer.updateValues('1010100010111010', 1)}, 3000);
