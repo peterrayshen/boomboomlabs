@@ -1,4 +1,5 @@
 var poplutaionSize = 5;
+var sequenceSize = 16;
 var mutationRate = 0.03;
 
 class Beat {
@@ -15,30 +16,30 @@ class Beat {
     }
 }
 
+const generateRandomBeat = () => {
+    beat = new Beat();
+    beat.score = 1;
+    beat.sequence = [];
+    for (var i = 0; i < sequenceSize; i++) {
+        var hitProbability = 0.35;
+        if (Math.random() < hitProbability) {
+            beat.sequence.push(1);
+        }
+        else {
+            beat.sequence.push(0);
+        }
+    }
+    return beat;
+}
+
 // population is an array of Beat
 const newGeneration = () => {
     console.log("helloooo");
     var population = [];
 
-    var beat1 = new Beat();
-    beat1.sequence = [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0];
-    beat1.score = 2;
-    population.push(beat1);
-
-    var beat2 = new Beat();
-    beat2.sequence = [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0];
-    beat2.score = 4;
-    population.push(beat2);
-
-    var beat3 = new Beat();
-    beat3.sequence = [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0];
-    beat3.score = 5;
-    population.push(beat3);
-
-    var beat4 = new Beat();
-    beat4.sequence = [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0];
-    beat4.score = 1;
-    population.push(beat4);
+    for (var i = 0; i < poplutaionSize; i++) {
+        population.push(generateRandomBeat());
+    }
 
     console.log(population);
     var matingPool = selection(population);
