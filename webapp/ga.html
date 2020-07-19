@@ -60,7 +60,7 @@ let trigger = 0;
 let autoplay = false;
 let osc;
 
-var soundStrings = ['', '', '', '', '',];
+var soundStrings = ['', '', '', '', ''];
 var numChars = 16;
 let words = ['0', '1',];
 let k = 0;
@@ -68,7 +68,7 @@ let k = 0;
 function preload() {
   // load song file
   for(let i = 0; i<songs.length;i++){
-  sounds[i] = loadSound(songs[i]); 
+  sounds[i] = loadSound("./sounds/" + songs[i]); 
  }
 }
 
@@ -256,7 +256,7 @@ function mousePressed(event) {
     let key = floor(map(mouseX, 0, width/1.5, 0, notes.length));
     print(key);
    // playNote(notes[key].play());
-    // sounds[key].play();
+    sounds[key].play();
     stop = false;
     splitString = split(soundStrings[key], ',');
     delayTime();
