@@ -3,6 +3,9 @@ import { LitElement, html, css } from "https://unpkg.com/lit-element/lit-element
 export class SoundSet extends LitElement {
     static get properties() {
         return {
+            currentData: { type: String },
+            currentRow: { type: Number },
+            soundName: { type: String },
             data: { type: Array },
             callback: { type: Function }
         }
@@ -10,18 +13,26 @@ export class SoundSet extends LitElement {
 
     constructor() {
         super();
+        this.currentData = '';
+        this.currentRow = 0;
+        this.soundName = '';
     }
 
     _playSound(data) {
-        
+        if (Tone.Transport.seconds > 0 && this.currentData === data) {
+            Tone.Transport.stop();
+            this.currentData = '';
+            return;
+        }
+
+        this.currentData = data;
 
         Tone.Transport.cancel();
 
-        const soundName = 'hh';
+        const soundName = this.soundName;
         const row = data.split('').map(val => Boolean(Number(val)));
-        console.log(row);
 
-        loop2 = new Tone.Sequence(function(time, col) {        
+        let loop = new Tone.Sequence(function(time, col) {        
             if (row[col]) {
                 keys.get(soundName).start(time, 0, '32n');
             }
@@ -47,10 +58,13 @@ export class SoundSet extends LitElement {
 
     render() {
         return html`
+            <h1>Modifying Row ${this.currentRow}</h1>
             ${this.data.map((val, i) => html`
                 <div class="sound-block">
                     <span>Sound ${i + 1}</span>
-                    <button @click=${() => this._playSound(this.data[i])}>Play</button>
+                    <button @click=${() => this._playSound(this.data[i])}>
+                        ${this.currentData === this.data[i] ? 'Pause' : 'Start'}
+                    </button>
                     <select>
                         <option>1</option>
                         <option>2</option>
@@ -58,7 +72,7 @@ export class SoundSet extends LitElement {
                         <option>4</option>
                         <option>5</option>
                     </select>
-                    <button @click=${() => this.callback('eggs')}>Select</button>
+                    <button @click=${() => this.callback(this.data[i], this.currentRow)}>Select</button>
                 </div>
             `)}
         `;

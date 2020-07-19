@@ -8,13 +8,11 @@ const samples = {
 const keys = new Tone.Players(samples, {"volume" : -10}).toMaster();
 const noteNames = Object.keys(samples);
 
-let loop, loop2;
-
 function createMainLoop() {
     Tone.Transport.cancel();
 
     // Runs the loop for the step sequencer.
-    loop = new Tone.Sequence(function(time, col) {
+    let loop = new Tone.Sequence(function(time, col) {
         const currentColumn = document.querySelector("step-sequencer").currentColumn;
     
         // Plays notes for each column.
@@ -32,20 +30,6 @@ function createMainLoop() {
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "16n").start(0);
 }
 
-function createSecondaryLoop(soundName, row) {
-    Tone.Transport.cancel();
-
-    loop2 = new Tone.Sequence(function(time, col) {        
-        if (row[col]) {
-            keys.get(soundName).start(time, 0, '32n');
-        }
-
-        Tone.Draw.schedule(function(){
-            document.querySelector("step-sequencer").setAttribute("highlight", col);
-        }, time);
-    }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], '16n').start(0);
-}
-
 // Use Tone.Transport methods to run events on playback and stop.
 // Use Tone.Transport members to get meta-data (i.e. use Tone.Transport.seconds for timing).
 Tone.Transport.on("stop", () => {
@@ -55,6 +39,7 @@ Tone.Transport.on("stop", () => {
 });
 
 const mainControl = document.querySelector(".start");
+
 mainControl.addEventListener('click', () => {
     createMainLoop();
     Tone.Transport.toggle();
@@ -63,27 +48,30 @@ mainControl.addEventListener('click', () => {
 
 const popup = document.querySelector('.pop-up');
 
-document.querySelector('.show-pop-up').addEventListener('click', () => {
-    Tone.Transport.cancel();
-    popup.style.display = 'block';
-});
-
 document.querySelector('.close-pop-up').addEventListener('click', () => {
     Tone.Transport.cancel();
     popup.style.display = 'none';
 });
 
-
-
-const sequencer = document.querySelector('step-sequencer');
-
-
-
 const soundset = document.querySelector('sound-set');
+const sequencer = document.querySelector('step-sequencer');
+const slider = document.querySelector(".slider");
+
 soundset.data = ['1010101010100100', '1111111100011111', '000100010000100', '1000100011010101', '0000000111100010'];
-soundset.callback = function (param) {
-    console.log(param);
+soundset.callback = function (data, currentRow) {
+    sequencer.updateValues(data, currentRow);
+    Tone.Transport.cancel();
+    popup.style.display = 'none';
 }
 
+sequencer.callback = function (currentRow) {
+    Tone.Transport.cancel();
+    popup.style.display = 'block';
+    soundset.soundName = noteNames[currentRow-1];
+    soundset.currentRow = currentRow; 
+}
 
-setTimeout(() => {sequencer.updateValues('1010100010111010', 1)}, 3000);
+slider.oninput = function() {
+    Tone.Transport.bpm.value = this.value;
+    document.querySelector(".range-value").innerHTML = this.value;
+}

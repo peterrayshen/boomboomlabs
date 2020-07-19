@@ -7,7 +7,8 @@ export class ToneStepSequencer extends LitElement {
             rows: { type: Number },
             columns: { type: Number },
             highlight: { type: Number },
-            values: { type: Array }
+            values: { type: Array },
+            callback: { type: Function }
         }
     }
 
@@ -26,7 +27,7 @@ export class ToneStepSequencer extends LitElement {
 
     updateValues(sequence, row) {
         sequence.split('').forEach((val, col) => {
-            this.values[col][row] = Boolean(Number(val));
+            this.values[col][row-1] = Boolean(Number(val));
         });
 
         this.requestUpdate();
@@ -144,16 +145,16 @@ export class ToneStepSequencer extends LitElement {
                 `)}
                 <div class="column">
                     <div class="row">
-                        <button>Modify</button>
+                        <button @click=${() => this.callback(1)}>Modify</button>
                     </div>
                     <div class="row">
-                        <button>Modify</button>
+                        <button @click=${() => this.callback(2)}>Modify</button>
                     </div>
                     <div class="row">
-                        <button>Modify</button>
+                        <button @click=${() => this.callback(3)}>Modify</button>
                     </div>
                     <div class="row">
-                        <button>Modify</button>
+                        <button @click=${() => this.callback(4)}>Modify</button>
                     </div>
                 </div>
             </div>
