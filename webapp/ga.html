@@ -36,6 +36,7 @@ let value = 100;
 let sel1;
 
 // For automatically playing the song
+let stop = true;
 let index = 0;
 // let song = [
 //   { note: 4, duration: 400, display: "D" },
@@ -48,17 +49,24 @@ let index = 0;
 //   { note: 0, duration: 400, display: "G" }
 // ];
 
-var songs = ['./sounds/lucky_dragons_-_power_melody.mp3','./sounds/Siren Song (From Siren).wav',];
+var songs = ['hh.mp3','hho.mp3','kick.mp3','snare.mp3', 'newperson.mp3'];
 var sounds = [];
 
 var items = ['1','1','1','1','1'];
+let key;
+let splitString = [];
 
 let trigger = 0;
 let autoplay = false;
 let osc;
 
+var soundStrings = ['', '', '', '', '',];
+var numChars = 16;
+let words = ['0', '1',];
+let k = 0;
+
 function preload() {
-  // song file
+  // load song file
   for(let i = 0; i<songs.length;i++){
   sounds[i] = loadSound(songs[i]); 
  }
@@ -77,6 +85,19 @@ function setup() {
   //     autoplay = true;
   //   }
   // });
+
+  // generate random strings
+  // generate random sounds
+  for (let i = 0; i < songs.length; i++){
+    for (let x = 0; x < numChars; x++){
+      soundStrings[i] += random(words) + ","; 
+    }
+  }
+
+  // print strings
+ for (let i = 0; i < soundStrings.length; i++){
+    print(soundStrings[i]);
+  }
 
   let submitButton = createButton("Next generation!");
   submitButton.mousePressed(function() {
@@ -178,6 +199,11 @@ function draw() {
   //   autoplay = false;
   // }
 
+  if (stop === true){
+    for (let i = 0; i < sounds.length; i++) {
+    sounds[i].stop();
+    }
+  }
 
   // Draw a keyboard
 
@@ -227,18 +253,46 @@ function mouseDragged()
 function mousePressed(event) {
   if(event.submitButton == 0 && event.clientX < width && event.clientY < height) {
     // Map mouse to the key index
-    let key = floor(map(mouseX, 0, width/2, 0, notes.length));
+    let key = floor(map(mouseX, 0, width/1.5, 0, notes.length));
     print(key);
    // playNote(notes[key].play());
-    sounds[key].play();
+    // sounds[key].play();
+    stop = false;
+    splitString = split(soundStrings[key], ',');
+    delayTime();
     
   }
+}
+
+function delayTime(){
+  // nothing 
+  if (stop === false){
+     // print(splitString.length);
+      // if char is 1 play sound
+      if(splitString[k] === '1' && k < splitString.length){
+          sounds[key].play();
+          k++;
+          print('1');
+          //delay
+        setTimeout(delayTime,1000);
+      } else if (splitString[k] === '0' && k < splitString.length) {
+        //delay
+        k++;
+        print('0');
+      setTimeout(delayTime,1000);
+      } else {
+
+      }
+  }
+
 }
 
   
 // Fade it out when we release
 function mouseReleased() {
   osc.fade(0,0.5);
+  stop = true;
+  k =0; // reset beat indexer
 }
 
 
