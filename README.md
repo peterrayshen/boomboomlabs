@@ -1,5 +1,5 @@
 # BoomBoomLabs
-A SYDE 361 project for music creation.
+A SYDE 361 project for music creation. Play here https://desolate-stream-78870.herokuapp.com/. 
 ## Setup Guide
 1. Download Node:
 - Go to https://nodejs.org/en/
