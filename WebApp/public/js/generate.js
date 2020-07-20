@@ -101,28 +101,3 @@ const crossover = (parentA, parentB) => {
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
-
-let results = newGeneration([
-    {
-        data: '1111111111111111',
-        rating: 4
-    }, 
-    {
-        data: '1011011110100101',
-        rating: 5
-    },
-    {
-        data: '0000011000111111',
-        rating: 5
-    },
-    {
-        data: '0101011010100010',
-        rating: 2
-    },
-    {
-        data: '1110011001101101',
-        rating: 1
-    }
-]);
-
-console.log('sirbacon', results); // eg. [{data: "101010", rating: 1}, {data: "101010", rating: 1}]
