@@ -31,7 +31,6 @@ function createMainLoop() {
 }
 
 // Use Tone.Transport methods to run events on playback and stop.
-// Use Tone.Transport members to get meta-data (i.e. use Tone.Transport.seconds for timing).
 Tone.Transport.on("stop", () => {
     setTimeout(() => {
         document.querySelector("step-sequencer").setAttribute("highlight", "-1");
