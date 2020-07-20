@@ -1,5 +1,13 @@
 # BoomBoomLabs
 A SYDE 361 project for music creation. Play here https://desolate-stream-78870.herokuapp.com/. 
+
+## Essential Files
+- The main app is housed in `./WebApp`.
+- The main html page which the server points to can be found at `./WebApp/stepSequencer.html`.
+- The relevant UI logic can be found in `./WebApp/public/js/index.js`.
+- The UI components created can be found in `./WebApp/public/js/components/`.
+- The genetic algorithm file can be found in `./WebApp/public/js/generate.js`.
+
 ## Setup Guide
 1. Download Node:
 - Go to https://nodejs.org/en/
