@@ -1,3 +1,5 @@
+import { generateRandomBeats } from './generate.js';
+
 // Loads all of the audio samples.
 const samples = {
     "hh" : "./sounds/hh.[mp3|ogg]",
@@ -62,18 +64,13 @@ soundset.callback = function (data, currentRow) {
     popup.style.display = 'none';
 }
 
+// When the modify button is pressed for a row.
 sequencer.callback = function (currentRow) {
-    soundset.data = [
-        [
-            {data: '1010101010100100', rating: 1}, 
-            {data: '1111111100011111', rating: 1}, 
-            {data: '0001000100001001', rating: 1}, 
-            {data: '1000100011010101', rating: 1}, 
-            {data: '0000000111100010', rating: 1}
-        ]
-    ];
+    soundset.data = generateRandomBeats();
     Tone.Transport.cancel();
     popup.style.display = 'block';
+    soundset.resetSliders();
+    soundset.currentGeneration = 1;
     soundset.soundName = noteNames[currentRow-1];
     soundset.currentRow = currentRow; 
 }

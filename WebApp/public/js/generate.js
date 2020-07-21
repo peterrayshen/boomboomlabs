@@ -1,11 +1,13 @@
-var poplutaionSize = 5;
-var sequenceSize = 16;
-var mutationRate = 0.03;
+// GENETIC ALGORITHM
+// Data Structure ––> [ {data: BinaryString[], rating: Number } ]
+
+const populationSize = 5;
+const sequenceSize = 16;
+const mutationRate = 0.03;
 
 class Beat {
-
-    // sequence property (array of 1s and 0s)
-    // score property
+    // this.sequence: Binary array representing beat sequence.
+    // this.rating: Rating associated with beat.
 
     constructor(newBeat) {
         this.sequence = [];
@@ -16,84 +18,75 @@ class Beat {
     }
 
     mutate(mutationRate) {
-        for (var i = 0; i < this.sequence.length; i++) {
+        for (let i = 0; i < sequenceSize; i++) {
             if (Math.random() < mutationRate) {
-                this.sequence[i] = 0 ? this.sequence[1] == 1 : 0;
+                this.sequence[i] = (this.sequence[i] == 0) ? 1 : 0;
             }
         }
     }
 }
 
-const generateRandomBeat = () => {
-    beat = new Beat();
-    beat.score = 1;
-    beat.sequence = [];
-    for (var i = 0; i < sequenceSize; i++) {
-        var hitProbability = 0.35;
-        if (Math.random() < hitProbability) {
-            beat.sequence.push(1);
+export function generateRandomBeats() {
+    const hitProbability = 0.35;
+    let beats = [];
+    let unit, newSequence;
+    for (let i = 0; i < populationSize; i++) {
+        newSequence = [];
+        for (let j = 0; j < sequenceSize; j++) {
+            unit = (Math.random() < hitProbability) ? 1 : 0;
+            newSequence.push(unit);
         }
-        else {
-            beat.sequence.push(0);
-        }
+        beats.push({data: newSequence.join(''), rating: 1});
     }
-    return beat;
+    return beats;
 }
 
-// population is an array of Beat
 export function newGeneration(beats) {
-    var population = [];
-
-    for (var i = 0; i < beats.length; i++) {
-        population.push(new Beat(beats[i]));
-    }
-
-    var matingPool = selection(population);
-    let newPoplution = generate(population, matingPool);
-    let formatted = [];
-    newPoplution.forEach(element => {
-        formatted.push({data: element.sequence.join(""), rating: element.rating});
-    })
-    return formatted;
+    const population = beats.map(beat => new Beat(beat)); // Array of beat instantiations.
+    const matingPool = selection(population); // Scaled version of population proportional to rating.
+    const newPopulation = generate(population, matingPool);
+    
+    // Returns a re-formatted set.
+    return newPopulation.map(beat => (
+        {data: beat.sequence.join(''), rating: beat.rating}
+    ));
 }
 
-// population is a list of beats
 const selection = (population) => {
-    var matingPool = [];
-    population.forEach(element => {
+    let matingPool = [];
+    population.forEach(beat => {
         // for example, if beat 1 scores a 5/5, beat 1 is replicated 5 times in the mating pool
-        for (var i = 0; i < element.rating; i++) {
-            matingPool.push(element)
+        for (let i = 0; i < beat.rating; i++) {
+            matingPool.push(beat)
         }
     });
     return matingPool;
 }
 
 const generate = (population, matingPool) => {
-    let newPopulation = [];
-    for (var i = 0; i < population.length; i++) {
-        var a = getRandomInt(matingPool.length);
-        var b = getRandomInt(matingPool.length);
-        var parentA = matingPool[a];
-        var parentB = matingPool[b];
-        var child = crossover(parentA, parentB);
-        child.mutate();
+    let newPopulation = []; 
+    let a, b, parentA, parentB, child;
+    for (let i = 0; i < population.length; i++) {
+        a = getRandomInt(matingPool.length);
+        b = getRandomInt(matingPool.length);
+        parentA = matingPool[a];
+        parentB = matingPool[b];
+        child = crossover(parentA, parentB); // Mandatory cross-over operation.
+        child.mutate(mutationRate);
         newPopulation.push(child);
     }
     return newPopulation;
 }
 
 const crossover = (parentA, parentB) => {
-    let newSequence = [];
-    for (var i = 0; i < parentA.sequence.length; i++) {
-        // first half of sequence from parentA, second half from parentB
-        if (i < parentA.sequence.length / 2) {
-            newSequence.push(parentA.sequence[i]);
-        }
-        else {
-            newSequence.push(parentB.sequence[i]);
-        }
+    let newSequence = [], locus;
+    const crossoverPosition = getRandomInt(sequenceSize - 1);
+
+    for (let i = 0; i < sequenceSize; i++) {
+        locus = (i <= crossoverPosition) ? parentA.sequence[i] : parentB.sequence[i];
+        newSequence.push(locus);
     }
+
     let child = new Beat({data: newSequence, rating: 1});
     return child;
 }
