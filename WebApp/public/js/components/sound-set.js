@@ -25,10 +25,26 @@ export class SoundSet extends LitElement {
     }
     
     parseData(data) {
-        return data.split('').map(val => [Boolean(Number(val))])
+        return JSON.stringify(data.split('').map(val => [Boolean(Number(val))]));
     }
 
-    _play(data, i, generation) {
+    resetSliders() {
+        const slider = this.shadowRoot.querySelectorAll('.slider');
+        // Reset slider position.
+        for (let i = 0; i < slider.length; i++) {            
+            slider[i].value = 1;
+        }
+    }
+
+    _play(data, i) {
+        const samples = {
+            "hh" : "./sounds/hh.[mp3|ogg]",
+            "hho" : "./sounds/hho.[mp3|ogg]",
+            "kick" : "./sounds/kick.[mp3|ogg]",
+            "snare" : "./sounds/snare.[mp3|ogg]"
+        };
+        const keys = new Tone.Players(samples, {"volume" : -10}).toMaster();
+        
         if (Tone.Transport.seconds > 0 && this.currentData === data) {
             Tone.Transport.stop();
             this.currentData = '';
@@ -41,7 +57,7 @@ export class SoundSet extends LitElement {
 
         const soundName = this.soundName;
         const row = data.split('').map(val => Boolean(Number(val)));
-        const sequencer = this.shadowRoot.querySelector(`.sequencer-${generation}-${i}`);
+        const sequencer = this.shadowRoot.querySelector(`.sequencer-${i}`);
 
         let loop = new Tone.Sequence(function(time, col) {
             if (row[col]) keys.get(soundName).start(time, 0, '32n');
@@ -56,24 +72,23 @@ export class SoundSet extends LitElement {
     }
 
     _generate() {
-        let result = newGeneration(this.data[0]);
-        this.data.push(result);
-        console.log(this.data);
+        let result = newGeneration(this.data);
+        this.data = result;
         this.currentGeneration++;
+        this.resetSliders();
+        this.requestUpdate();
     }
 
-    _handleRatingChange(e, i, generation) {
-        this.data[generation][i].rating = Number(e.path[0].value);
+    _handleRatingChange(e, i) {
+        this.data[i].rating = Number(e.path[0].value);
         this.requestUpdate();
     }
 
     static get styles() {
         return css`
             .sound-block {
-                border: 1px solid black;
                 padding: 10px;
             }
-
             .generate {
                 margin-top: 20px;
             }
@@ -85,29 +100,27 @@ export class SoundSet extends LitElement {
 
     render() {
         return html`
-            <h1>Modifying Row ${this.currentRow}</h1>
-            ${this.data.map((generation, j) => html`
-                <h3>generation ${j+1}</h3>
-                ${generation.map((val, i) => html`
+            <h1>Modifying Row ${this.currentRow}</h1>                      
+                <div class="generate">
+                    <button @click=${this._generate}>Generate</button>
+                    <span>generation ${this.currentGeneration}</span>
+                </div>
+                ${this.data.map((val, i) => html`
                     <div class="sound-block">
                         <span>Sound ${i + 1}</span>
-                        <button @click=${() => this._play(this.data[j][i].data, i, j)}>
-                            ${this.currentData === this.data[j][i].data ? 'Pause' : 'Start'}
+                        <button @click=${() => this._play(val.data, i)}>
+                            ${this.currentData === val.data ? 'Pause' : 'Start'}
                         </button>
-                        <input type="range" min="1" max="5" value="1" step="1" @input=${(e) => this._handleRatingChange(e, i, j)}>
-                        <span>${this.data[j][i].rating}</span>
-                        <button @click=${() => this.callback(this.data[j][i].data, this.currentRow)}>Select</button>
+                        <input class="slider" type="range" min="1" max="5" value=${val.rating} step="1" @input=${(e) => this._handleRatingChange(e, i)}>
+                        <span>${val.rating}</span>
+                        <button @click=${() => this.callback(val.data, this.currentRow)}>Select</button>
                         <step-sequencer
-                            values=${JSON.stringify(this.parseData(this.data[j][i].data))}
-                            class="sequencer-${j}-${i}" 
+                            values=${this.parseData(val.data)}
+                            class="sequencer-${i}" 
                             rows="1"
                         ></step-sequencer>
                     </div>
                 `)}
-            `)}
-            <div class="generate">
-                <button @click=${this._generate}>Generate</button>
-            </div>
         `;
     }
 }

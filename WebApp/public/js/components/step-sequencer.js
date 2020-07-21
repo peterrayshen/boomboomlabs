@@ -73,7 +73,6 @@ export class ToneStepSequencer extends LitElement {
     firstUpdated(changed) {
         if (this.values.length > 0) return;
         if (changed.has('columns') || changed.has('rows')) {
-            console.log('ran');
             this.values = [];
 
             for (let x = 0; x < this.columns; x++) {
@@ -85,14 +84,6 @@ export class ToneStepSequencer extends LitElement {
             }
             this.requestUpdate();
         }
-    }
-
-    updated(changed) {
-        if (this.values.hasChanged) {
-            // this.updateValues(this.test, 1);
-            console.log(this.values);
-        }
-
     }
 
     static get styles() {
@@ -151,7 +142,7 @@ export class ToneStepSequencer extends LitElement {
             }
 
             .adj > .column {
-                height: 50px;
+                height: 30px;
             }
         `;
     }
@@ -175,7 +166,7 @@ export class ToneStepSequencer extends LitElement {
                 ${this.isEditable ? html`<div class="column">
                     ${Array(this.rows).fill(0).map((e, i) => html`
                         <div class="row modify-button">
-                            <button @click=${() => this.callback(i + 1)}>Modify</button>
+                            <button @click=${() => this.callback(i + 1)}>Generate</button>
                         </div>                        
                     `)}
                 </div>` : html``}
