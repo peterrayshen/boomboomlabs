@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>BoomBoomLabs</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="icon" type="image/png" sizes="174x174" href="./favicon.png">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+	<script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+	<script src="./js/packages/Tone.js"></script>
+	<script src="./js/packages/tonejs-ui.js"></script>
+	<script type="module" src="./js/generate.js"></script>
+	<script type="module" src="./js/components/step-sequencer.js"></script>
+	<script type="module" src="./js/components/sound-set.js"></script>
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			font-family: 'Roboto Mono', monospace;
+		}
+		.pop-up {
+			padding: 40px;
+			box-shadow: 2px 3px 16px 0px #d7d7d7;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			display: none;
+			background: white;
+			position: absolute;
+			width: 80%;
+			height: 70%;
+			overflow: scroll;
+		}
+		.close-pop-up {
+			position: absolute;
+			right: 35px;
+			font-size: 45px;
+			font-weight: lighter;
+			top: 35px;
+			color: #666666;
+			cursor: pointer;
+		}
+		.close-pop-up:hover {
+			color: rgb(26, 26, 26);
+			transition: 1s;
+		}
+		.slider {
+			width: 70%;
+			position: relative;
+			top: 3px;
+		}
+		button {
+			cursor: pointer;
+			box-shadow: 1px 1px 3px #747474;
+			font-family: 'Roboto Mono', monospace;
+			color: black;
+			padding: 10px 20px 10px 20px;
+			width: 100px;
+			border-radius: 4px;
+			border: none;
+		}
+		button:hover {
+			background-color: #e7e7e7;
+			transition: 0.3s;
+		}
+		h1 {
+			margin-bottom: -7px;
+		}
+		h1 > span {
+			color: teal;
+		}
+		step-sequencer {
+			margin-top: 1em;
+		}
+	</style>
+</head>
+<body>
+	<tone-content>
+		<h1>BoomBoom<span>Labs</span></h1>
+		<h3><em>generative music</em></h3>
+		<button class="start">Start</button>
+		<input class="slider" type="range" min="50" max="200" value="120">
+		<span class="range-value">120</span>
+		<step-sequencer isEditable></step-sequencer>
+	</tone-content>
+
+	<div class="pop-up">
+		<span class="close-pop-up">×</span>
+		<sound-set></sound-set>
+	</div>
+	
+	<script type="module" src="./js/index.js"></script>
+</body>
+</html>
