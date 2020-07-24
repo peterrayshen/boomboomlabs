@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+	<title>BoomBoomLabs</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="icon" type="image/png" sizes="174x174" href="./favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+	<script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+	<script src="./js/packages/Tone.js"></script>
+	<script src="./js/packages/tonejs-ui.js"></script>
+	<script type="module" src="./js-alt3/generate.js"></script>
+	<script type="module" src="./js-alt3/components/step-sequencer.js"></script>
+	<script type="module" src="./js-alt3/components/sound-set.js"></script>
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			font-family: 'Roboto Mono', monospace;
+		}
+        .main-app {
+            display: block;
+        }
+        .generative-app {
+            display: none;
+            width: 850px;
+            margin: 50px auto;
+        }
+		.close-pop-up {
+			font-weight: 600;
+			font-size: 15px;
+			cursor: pointer;
+            margin-bottom: 30px;
+		}
+        .close-pop-up > span {
+
+            cursor: pointer !important;
+        }
+		.close-pop-up:hover {
+			color: teal;
+			transition: 1s;
+		}
+		.slider {
+			width: 70%;
+			position: relative;
+			top: 3px;
+		}
+		button {
+			cursor: pointer;
+			box-shadow: 1px 1px 3px #747474;
+			font-family: 'Roboto Mono', monospace;
+			color: black;
+			padding: 10px 20px 10px 20px;
+			width: 100px;
+			border-radius: 4px;
+			border: none;
+		}
+		button:hover {
+			background-color: #e7e7e7;
+			transition: 0.3s;
+		}
+		h1 {
+			margin-bottom: -7px;
+		}
+		h1 > span {
+			color: teal;
+		}
+		step-sequencer {
+			margin-top: 1em;
+		}
+	</style>
+</head>
+<body>
+    <div class="main-app">
+        <tone-content>
+            <h1>BoomBoom<span>Labs</span></h1>
+            <h3><em>generative music</em></h3>
+            <button class="start">Play</button>
+            <input class="slider" type="range" min="50" max="200" value="120">
+            <span class="range-value">120</span>
+            <step-sequencer isEditable></step-sequencer>
+        </tone-content>
+    </div>
+
+	<div class="generative-app">
+		<div class="close-pop-up"><span><–– Back</span></div>
+		<sound-set></sound-set>
+	</div>
+	
+	<script type="module" src="./js-alt3/index.js"></script>
+</body>
+</html>
