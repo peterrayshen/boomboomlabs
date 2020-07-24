@@ -3,7 +3,7 @@
 
 const populationSize = 5;
 const sequenceSize = 16;
-const mutationRate = 0.03;
+const mutationRate = 0.02;
 
 class Beat {
     // this.sequence: Binary array representing beat sequence.
@@ -43,14 +43,15 @@ export function generateRandomBeats() {
 
 export function newGeneration(beats, style, soundName) {
     const population = beats.map(beat => new Beat(beat)); // Array of beat instantiations.
-    let target;
+    let matingPool = [];
 
     if (arguments.length > 1) {
-        target = styleMap[style][soundName].split('').map(Number);
-        console.log(style, soundName, styleMap[style][soundName]);
+        let target = styleMap[style][soundName].split('').map(Number);
+        matingPool = selectionViaStyle(population, target);
+    } else {
+        matingPool = selectionViaRating(population);
     }
 
-    const matingPool = selection(population, target); // Scaled version of population proportional to rating.
     const newPopulation = generate(population, matingPool);
     
     // Returns a re-formatted set.
@@ -59,14 +60,21 @@ export function newGeneration(beats, style, soundName) {
     ));
 }
 
-const selection = (population, target) => {
+const selectionViaRating = (population) => {
     let matingPool = [];
     population.forEach(beat => {
         // for example, if beat 1 scores a 5/5, beat 1 is replicated 5 times in the mating pool
         for (let i = 0; i < beat.rating; i++) {
             matingPool.push(beat);
         }
+    });
+    return matingPool;
+}
 
+const selectionViaStyle = (population, target) => {
+    let matingPool = [];
+
+    population.forEach(beat => {
         if (target) {
             let count = 0;
             for (let j = 0; j < target.length; j++) {
@@ -84,7 +92,7 @@ const selection = (population, target) => {
             } else if (0.6 <= percentage && percentage < 0.8) {
                 score = 4;
             } else if (0.8 <= percentage && percentage <= 1) {
-                score = 15;
+                score = 5;
             }
 
             for (let k = 0; k < score; k++) {
@@ -92,6 +100,7 @@ const selection = (population, target) => {
             }
         }
     });
+
     return matingPool;
 }
 
