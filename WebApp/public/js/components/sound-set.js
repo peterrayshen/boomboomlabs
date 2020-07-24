@@ -156,17 +156,20 @@ export class SoundSet extends LitElement {
             .select-button {
                 float: right;
             }
+
+            .music-style-form {
+                margin-bottom: 30px;
+            }
         `;
     }
 
     render() {
         return html`
             <h1>Modifying Row ${this.currentRow}</h1>                      
-                <div class="generate">
-                    <button @click=${this._generate}>Generate</button>
-                    <span>generation ${this.currentGeneration}</span>
+                <div class="generate">                    
                     ${this.hideSliders ? html`
-                    <div>
+                    <div class="music-style-form">
+                        <span><strong>Select a musical style:</strong></span>
                         <input type="radio" id="none" name="style" value="none" @click=${this._handleStyle} checked>
                         <label for="male">None</label>
                         <input type="radio" id="hiphop" name="style" value="hiphop" @click=${this._handleStyle}>
@@ -176,6 +179,8 @@ export class SoundSet extends LitElement {
                         <input type="radio" id="rock" name="style" value="rock" @click=${this._handleStyle}>
                         <label for="other">Rock</label>
                     </div>` : html``}
+                    <button @click=${this._generate}>Generate</button>
+                    <span>generation ${this.currentGeneration}</span>
                 </div>
                 ${this.data.map((val, i) => html`
                     <div class="sound-block">
