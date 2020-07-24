@@ -41,9 +41,16 @@ export function generateRandomBeats() {
     return beats;
 }
 
-export function newGeneration(beats) {
+export function newGeneration(beats, style, soundName) {
     const population = beats.map(beat => new Beat(beat)); // Array of beat instantiations.
-    const matingPool = selection(population); // Scaled version of population proportional to rating.
+    let target;
+
+    if (arguments.length > 1) {
+        target = styleMap[style][soundName].split('').map(Number);
+        console.log(style, soundName, styleMap[style][soundName]);
+    }
+
+    const matingPool = selection(population, target); // Scaled version of population proportional to rating.
     const newPopulation = generate(population, matingPool);
     
     // Returns a re-formatted set.
@@ -52,12 +59,37 @@ export function newGeneration(beats) {
     ));
 }
 
-const selection = (population) => {
+const selection = (population, target) => {
     let matingPool = [];
     population.forEach(beat => {
         // for example, if beat 1 scores a 5/5, beat 1 is replicated 5 times in the mating pool
         for (let i = 0; i < beat.rating; i++) {
-            matingPool.push(beat)
+            matingPool.push(beat);
+        }
+
+        if (target) {
+            let count = 0;
+            for (let j = 0; j < target.length; j++) {
+                if (beat.sequence[j] === target[j]) count++;
+            }
+            let percentage = count/target.length;
+            let score = 0;
+            
+            if (0 <= percentage && percentage  < 0.2) {
+                score = 1;
+            } else if (0.2 <= percentage && percentage < 0.4) {
+                score = 2;
+            } else if (0.4 <= percentage && percentage < 0.6) {
+                score = 3;
+            } else if (0.6 <= percentage && percentage < 0.8) {
+                score = 4;
+            } else if (0.8 <= percentage && percentage <= 1) {
+                score = 15;
+            }
+
+            for (let k = 0; k < score; k++) {
+                matingPool.push(beat);
+            }
         }
     });
     return matingPool;
@@ -93,4 +125,25 @@ const crossover = (parentA, parentB) => {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+const styleMap = {
+    'hiphop': {
+        'hh': '1010101110001010',
+        'hho': '0000000000100000',
+        'kick': '1000000110000010',
+        'snare': '0000100000001000'
+    },
+    'edm': {
+        'hh': '0000000001000000',
+        'hho': '0010001000100010',
+        'kick': '1000100010001000',
+        'snare': '0000100000001000'
+    },
+    'rock': {
+        'hh': '1010101010101010',
+        'hho': '0000000000000000',
+        'kick': '1010001010100010',
+        'snare': '0000100000001000'
+    }
 }
