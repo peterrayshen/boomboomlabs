@@ -24,7 +24,12 @@ app.get('/ga', (req, res) => {
   res.sendfile(path.join(__dirname, 'ga.html'));
 });
 
-app.listen(8000, () => {
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+
+app.listen(port, () => {
   console.log('StepSequencer hosted on http://localhost:8000/')
   console.log('GA hosted on http://localhost:8000/ga')
 });
