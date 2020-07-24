@@ -11,7 +11,8 @@ export class SoundSet extends LitElement {
             soundName: { type: String },
             data: { type: Array },
             ratings: { type: Array },
-            callback: { type: Function }
+            callback: { type: Function },
+            style: { type: String }
         }
     }
 
@@ -22,6 +23,7 @@ export class SoundSet extends LitElement {
         this.currentRow = 0;
         this.currentGeneration = 1;
         this.soundName = '';
+        this.style = 'none';    
     }
     
     parseData(data) {
@@ -34,6 +36,12 @@ export class SoundSet extends LitElement {
         for (let i = 0; i < slider.length; i++) {            
             slider[i].value = 1;
         }
+    }
+
+    resetRadio() {
+        const radio = this.shadowRoot.querySelector('#none');
+        this.style = 'none';
+        radio.checked = true;
     }
 
     _play(data, i) {
@@ -72,7 +80,7 @@ export class SoundSet extends LitElement {
     }
 
     _generate() {
-        let result = newGeneration(this.data);
+        let result = this.style !== 'none' ? newGeneration(this.data, this.style, this.soundName) : newGeneration(this.data);
         this.data = result;
         this.currentGeneration++;
         this.resetSliders();
@@ -82,6 +90,10 @@ export class SoundSet extends LitElement {
     _handleRatingChange(e, i) {
         this.data[i].rating = Number(e.path[0].value);
         this.requestUpdate();
+    }
+
+    _handleStyle(e) {
+        this.style = e.path[0].value;
     }
 
     static get styles() {
@@ -104,6 +116,16 @@ export class SoundSet extends LitElement {
                 <div class="generate">
                     <button @click=${this._generate}>Generate</button>
                     <span>generation ${this.currentGeneration}</span>
+                    <div>
+                        <input type="radio" id="none" name="style" value="none" @click=${this._handleStyle} checked>
+                        <label for="male">None</label>
+                        <input type="radio" id="hiphop" name="style" value="hiphop" @click=${this._handleStyle}>
+                        <label for="female">Hiphop</label>
+                        <input type="radio" id="edm" name="style" value="edm" @click=${this._handleStyle}>
+                        <label for="other">EDM</label>
+                        <input type="radio" id="rock" name="style" value="rock" @click=${this._handleStyle}>
+                        <label for="other">Rock</label>
+                    </div>
                 </div>
                 ${this.data.map((val, i) => html`
                     <div class="sound-block">
