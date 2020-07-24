@@ -12,7 +12,8 @@ export class SoundSet extends LitElement {
             data: { type: Array },
             ratings: { type: Array },
             callback: { type: Function },
-            style: { type: String }
+            style: { type: String },
+            hideSliders: { type: Boolean }
         }
     }
 
@@ -24,6 +25,7 @@ export class SoundSet extends LitElement {
         this.currentGeneration = 1;
         this.soundName = '';
         this.style = 'none';    
+        this.hideSliders = false;
     }
     
     parseData(data) {
@@ -39,9 +41,11 @@ export class SoundSet extends LitElement {
     }
 
     resetRadio() {
-        const radio = this.shadowRoot.querySelector('#none');
-        this.style = 'none';
-        radio.checked = true;
+        if (this.hideSliders) {
+            const radio = this.shadowRoot.querySelector('#none');
+            this.style = 'none';
+            radio.checked = true;
+        }
     }
 
     _play(data, i) {
@@ -107,6 +111,51 @@ export class SoundSet extends LitElement {
             input[type="range"] {
                 width: 50%;
             }
+            button {
+                cursor: pointer;
+                box-shadow: 1px 1px 3px #747474;
+                font-family: 'Roboto Mono', monospace;
+                color: Black;
+                padding: 5px;
+                border-radius: 4px;
+                border: none;
+            }
+            button:hover {
+                background-color: #b2b2b2;
+                transition: 0.3s;
+            }
+            .slider {
+                width: 300px !important;
+                position: relative !important;
+                top: 3px !important;
+            }
+            .sound-block > .controls {
+                margin-bottom: 4px;
+            }
+
+            .generate > button {
+                background-color: teal;
+                color: white;
+                padding: 10px;
+            }
+
+            .generate > button:hover {
+                background-color: #006868;
+                color: white;
+                transition: 0.3s;
+                
+            }
+
+            .generate {
+                display: inline-block;
+                text-align: center;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .select-button {
+                float: right;
+            }
         `;
     }
 
@@ -116,6 +165,7 @@ export class SoundSet extends LitElement {
                 <div class="generate">
                     <button @click=${this._generate}>Generate</button>
                     <span>generation ${this.currentGeneration}</span>
+                    ${this.hideSliders ? html`
                     <div>
                         <input type="radio" id="none" name="style" value="none" @click=${this._handleStyle} checked>
                         <label for="male">None</label>
@@ -125,17 +175,21 @@ export class SoundSet extends LitElement {
                         <label for="other">EDM</label>
                         <input type="radio" id="rock" name="style" value="rock" @click=${this._handleStyle}>
                         <label for="other">Rock</label>
-                    </div>
+                    </div>` : html``}
                 </div>
                 ${this.data.map((val, i) => html`
                     <div class="sound-block">
-                        <span>Sound ${i + 1}</span>
-                        <button @click=${() => this._play(val.data, i)}>
-                            ${this.currentData === val.data ? 'Pause' : 'Start'}
-                        </button>
-                        <input class="slider" type="range" min="1" max="5" value=${val.rating} step="1" @input=${(e) => this._handleRatingChange(e, i)}>
-                        <span>${val.rating}</span>
-                        <button @click=${() => this.callback(val.data, this.currentRow)}>Select</button>
+                        <div class="controls">
+                            <span>Sound ${i + 1}</span>
+                            <button @click=${() => this._play(val.data, i)}>
+                                ${this.currentData === val.data ? 'Pause' : 'Start'}
+                            </button>
+                            ${!this.hideSliders ? html`
+                                <input class="slider" type="range" min="1" max="5" value=${val.rating} step="1" @input=${(e) => this._handleRatingChange(e, i)}>
+                                <span>${val.rating}</span>
+                            ` : html``}
+                            <button class="select-button" @click=${() => this.callback(val.data, this.currentRow)}>Select</button>
+                        </div>
                         <step-sequencer
                             values=${this.parseData(val.data)}
                             class="sequencer-${i}" 

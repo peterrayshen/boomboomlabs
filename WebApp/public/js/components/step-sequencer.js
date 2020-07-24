@@ -104,10 +104,11 @@ export class ToneStepSequencer extends LitElement {
                 flex-direction: column;
             }
             .column.highlight {
-                background-color: gray;
+                
             }
             .column.highlight .row {
-                transition-duration: 0.4s;
+                
+                background-color: grey;
             }
             .column.highlight .row.filled {
                 transition: background-color 0.1s;
@@ -117,12 +118,13 @@ export class ToneStepSequencer extends LitElement {
             }
             .row {
                 flex: 1;
-                margin: 1px 1px 4px 1px;
-                background-color: gray;
+                margin: 1px 1px 6px 1px;
+                background-color: #c0c0c0;
                 transition: background-color 0s;
+                border-radius: 4px;
             }
             .row.filled {
-                background-color: teal;
+                background-color: #256868;
             }
             .row button {
                 width: 100%;
@@ -143,6 +145,31 @@ export class ToneStepSequencer extends LitElement {
 
             .adj > .column {
                 height: 30px;
+            }
+
+            button {
+                margin-left: 5px;
+                cursor: pointer;
+                box-shadow: 1px 1px 3px #747474;
+                font-family: 'Roboto Mono', monospace;
+                color: black;
+                
+                border-radius: 4px;
+                border: none;
+            }
+            button:hover {
+                background-color: #e7e7e7;
+                transition: 0.3s;
+            }
+
+            .isEdit .row.filled:hover {
+                background-color: teal !important;
+                transition: 0.15s;
+            }
+
+            .isEdit .row:hover {
+                background-color: #9b9b9b;
+                transition: 0.15s;
             }
         `;
     }
@@ -166,7 +193,7 @@ export class ToneStepSequencer extends LitElement {
                 ${this.isEditable ? html`<div class="column">
                     ${Array(this.rows).fill(0).map((e, i) => html`
                         <div class="row modify-button">
-                            <button @click=${() => this.callback(i + 1)}>Generate</button>
+                            <button @click=${() => this.callback(i + 1)}>Gen</button>
                         </div>                        
                     `)}
                 </div>` : html``}
