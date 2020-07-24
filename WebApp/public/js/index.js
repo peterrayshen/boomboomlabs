@@ -70,6 +70,7 @@ sequencer.callback = function (currentRow) {
     Tone.Transport.cancel();
     popup.style.display = 'block';
     soundset.resetSliders();
+    soundset.resetRadio();
     soundset.currentGeneration = 1;
     soundset.soundName = noteNames[currentRow-1];
     soundset.currentRow = currentRow; 
